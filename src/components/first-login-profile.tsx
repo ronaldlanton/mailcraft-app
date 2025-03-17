@@ -33,7 +33,7 @@ type ProfileFormValues = z.infer<typeof profileSchema>
 
 export function FirstLoginProfile() {
   const { session, status } = useAuth()
-  const { setName, setEmail } = useProfile()
+  const { updateName, updateEmail } = useProfile()
   const [isOpen, setIsOpen] = React.useState(false)
   const [hasShown, setHasShown] = React.useState(false)
 
@@ -67,8 +67,8 @@ export function FirstLoginProfile() {
   }, [session, form])
 
   function onSubmit(data: ProfileFormValues) {
-    setName(data.name)
-    setEmail(data.email)
+    updateName(data.name)
+    updateEmail(data.email)
     localStorage.setItem('hasCompletedProfile', 'true')
     localStorage.setItem('userName', data.name)
     localStorage.setItem('userEmail', data.email)
