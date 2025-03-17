@@ -1,0 +1,8 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/api/openai/route": "/api/openai",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/breakdown/page": "/breakdown",
+  "/craft/page": "/craft"
+}

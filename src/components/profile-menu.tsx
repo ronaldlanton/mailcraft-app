@@ -1,8 +1,9 @@
 "use client"
 
 import * as React from "react"
-import { User, Settings, LogOut } from "lucide-react"
+import { User, Settings, LogOut, LogIn } from "lucide-react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
 
 import {
   DropdownMenu,
@@ -15,18 +16,53 @@ import {
 import { ThemeToggle } from "./theme-toggle"
 import { useProfile } from "@/context/profile-context"
 import { ProfileEditor } from "./profile-editor"
+import { useAuth } from "@/context/auth-context"
+import { Button } from "./ui/button"
 
 export function ProfileMenu() {
   const { name, email, profileImage } = useProfile()
   const [profileDialogOpen, setProfileDialogOpen] = React.useState(false)
+  const { session, status, signOut } = useAuth()
+  const router = useRouter()
 
+  const handleLogout = async () => {
+    await signOut()
+  }
+
+  const handleLogin = () => {
+    router.push('/login')
+  }
+
+  // If not authenticated, show login button
+  if (status === 'unauthenticated') {
+    return (
+      <Button 
+        variant="outline" 
+        size="sm" 
+        onClick={handleLogin}
+        className="flex items-center gap-2"
+      >
+        <LogIn className="h-4 w-4" />
+        <span>Sign In</span>
+      </Button>
+    )
+  }
+
+  // While loading auth state, show a smaller placeholder
+  if (status === 'loading') {
+    return (
+      <div className="h-10 w-10 rounded-full bg-gray-200 dark:bg-gray-800 animate-pulse"></div>
+    )
+  }
+
+  // When authenticated, show the full profile menu
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow">
             <Image 
-              src={profileImage} 
+              src={session?.user?.image || profileImage} 
               alt="Profile" 
               width={40} 
               height={40}
@@ -37,9 +73,9 @@ export function ProfileMenu() {
         <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="text-sm font-medium leading-none">{name}</p>
+              <p className="text-sm font-medium leading-none">{session?.user?.name || name}</p>
               <p className="text-xs leading-none text-muted-foreground">
-                {email}
+                {session?.user?.email || email}
               </p>
             </div>
           </DropdownMenuLabel>
@@ -60,7 +96,7 @@ export function ProfileMenu() {
             </div>
           </div>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleLogout}>
             <LogOut className="mr-2 h-4 w-4" />
             <span>Log out</span>
           </DropdownMenuItem>

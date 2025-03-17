@@ -1,0 +1,57 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/chunks/app/_not-found/page-b63df5a8d3225455.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/css/ba27943020a4b72d.css",
+      "static/chunks/874-476808868ec6108b.js",
+      "static/chunks/375-93f1b00002d8e426.js",
+      "static/chunks/550-ab98ab4e8558e61c.js",
+      "static/chunks/app/layout-2acf61cb34900a3d.js"
+    ],
+    "/api/openai/route": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/chunks/app/api/openai/route-d345440b7e96a54d.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/chunks/874-476808868ec6108b.js",
+      "static/chunks/app/page-e7933a1aab95a2a7.js"
+    ],
+    "/breakdown/page": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/chunks/874-476808868ec6108b.js",
+      "static/chunks/375-93f1b00002d8e426.js",
+      "static/chunks/558-c40c69bb13f77dad.js",
+      "static/chunks/app/breakdown/page-a74ee3ae79a2ed6c.js"
+    ],
+    "/craft/page": [
+      "static/chunks/webpack-6fcb39914e3011c5.js",
+      "static/chunks/4bd1b696-095da486deca910f.js",
+      "static/chunks/684-1a0d5c6afd2f6d89.js",
+      "static/chunks/main-app-b0bfc4d7d5ba68d6.js",
+      "static/chunks/874-476808868ec6108b.js",
+      "static/chunks/375-93f1b00002d8e426.js",
+      "static/chunks/558-c40c69bb13f77dad.js",
+      "static/chunks/app/craft/page-f42bdb604445b69d.js"
+    ]
+  }
+}

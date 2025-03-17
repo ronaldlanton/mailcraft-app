@@ -34,3 +34,34 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Deploy on Netlify
+
+### GitHub Setup
+1. Create a new GitHub repository or use an existing one
+2. Push this project to your GitHub repository:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit"
+   git branch -M main
+   git remote add origin https://github.com/yourusername/mailcraft.git
+   git push -u origin main
+   ```
+
+### Netlify Setup
+1. Sign up or log in to [Netlify](https://app.netlify.com/)
+2. Click "Add new site" > "Import an existing project" 
+3. Select your GitHub repository
+4. Configure build settings:
+   - Build command: `npm run build`
+   - Publish directory: `.next`
+5. Set up environment variables in Netlify's UI (Settings > Site settings > Environment variables):
+   - `OPENAI_API_KEY`
+   - `NEXTAUTH_URL` (your Netlify site URL)
+   - `NEXTAUTH_SECRET`
+   - `GOOGLE_CLIENT_ID`
+   - `GOOGLE_CLIENT_SECRET`
+6. Deploy your site
+
+For Google Auth to work properly, add your Netlify domain to the authorized redirect URIs in the [Google Cloud Console](https://console.cloud.google.com/).

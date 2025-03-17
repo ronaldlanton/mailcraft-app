@@ -33,22 +33,24 @@ type ViewMode = 'sequential' | 'all'
 
 export default function CraftEmail() {
   const [isLoading, setIsLoading] = useState(false)
-  const [generatedEmail, setGeneratedEmail] = useState('')
+  const [generatedEmail, setGeneratedEmail] = useState<string | 'loading' | null>(null)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [viewMode, setViewMode] = useState<ViewMode>('all')
+  const [viewMode, setViewMode] = useState<ViewMode>('sequential')
   const [emailTone, setEmailTone] = useState<string>('Professional')
   const [placeholders, setPlaceholders] = useState<{text: string, replacement: string}[]>([])
   const [updatedEmail, setUpdatedEmail] = useState('')
+  const [animatingCardId, setAnimatingCardId] = useState<string | null>(null)
+  const [deletedCardIndex, setDeletedCardIndex] = useState<number | null>(null)
   
-  const { register, handleSubmit, watch, control, reset, setValue } = useForm<FormData>({
+  const { register, handleSubmit, watch, control, setValue } = useForm<FormData>({
     defaultValues: {
       emailIdea: '',
       questionItems: []
     }
   })
   
-  const { fields, append, replace } = useFieldArray({
+  const { fields, replace } = useFieldArray({
     control,
     name: 'questionItems'
   })
@@ -204,7 +206,7 @@ ${data.emailIdea}`,
         });
       
       // Convert to question items
-      const questionItems = questionBlocks.map((item: any, index: number) => ({
+      const questionItems = questionBlocks.map((item: {question: string, type: string, options?: string[], default?: string}, index: number) => ({
         id: `q-${index}`,
         question: item.question,
         answer: item.default || '',
@@ -296,17 +298,6 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
     }
   }
 
-  const startOver = () => {
-    setGeneratedEmail('')
-    setCurrentQuestionIndex(0)
-    setAnswers({})
-    setViewMode('all')
-    reset({
-      emailIdea: '',
-      questionItems: []
-    })
-  }
-
   const handleAnswerChange = (fieldId: string, value: string) => {
     const newAnswers = {...answers};
     newAnswers[fieldId] = value;
@@ -320,23 +311,35 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
   }
   
   const handleDeleteQuestion = (fieldId: string) => {
-    // Find the index of the field with this id
+    // Find the index of the field with this id before animating
     const fieldIndex = fields.findIndex(f => f.id === fieldId);
+    
     if (fieldIndex !== -1) {
-      // Remove from form state
-      const newFields = [...fields];
-      newFields.splice(fieldIndex, 1);
-      replace(newFields);
+      // Set the animating card ID and index to trigger animations
+      setAnimatingCardId(fieldId);
+      setDeletedCardIndex(fieldIndex);
       
-      // Remove from answers
-      const newAnswers = {...answers};
-      delete newAnswers[fieldId];
-      setAnswers(newAnswers);
-      
-      // Adjust current index if needed
-      if (viewMode === 'sequential' && currentQuestionIndex >= newFields.length) {
-        setCurrentQuestionIndex(Math.max(0, newFields.length - 1));
-      }
+      // Wait for animation to complete before removing from state
+      setTimeout(() => {
+        // Remove from form state
+        const newFields = [...fields];
+        newFields.splice(fieldIndex, 1);
+        replace(newFields);
+        
+        // Remove from answers
+        const newAnswers = {...answers};
+        delete newAnswers[fieldId];
+        setAnswers(newAnswers);
+        
+        // Adjust current index if needed
+        if (viewMode === 'sequential' && currentQuestionIndex >= newFields.length) {
+          setCurrentQuestionIndex(Math.max(0, newFields.length - 1));
+        }
+        
+        // Reset animation states
+        setAnimatingCardId(null);
+        setDeletedCardIndex(null);
+      }, 300); // Match animation duration
     }
   }
   
@@ -377,6 +380,20 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
       </DropdownMenuContent>
     </DropdownMenu>
   )
+
+  // Helper function to determine card animation classes
+  const getCardAnimationClasses = (fieldId: string, index: number) => {
+    if (animatingCardId === fieldId) {
+      return "animate-slide-out-right animate-fade-out";
+    }
+    
+    // Apply slide-up animation to cards below the deleted card
+    if (deletedCardIndex !== null && index > deletedCardIndex) {
+      return "animate-slide-up";
+    }
+    
+    return "";
+  }
 
   return (
     <div className="container mx-auto py-8 flex flex-col min-h-[calc(100vh-14rem)] justify-center">
@@ -449,8 +466,11 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
           
           {/* Sequential View */}
           {viewMode === 'sequential' && fields.map((field, index) => (
-            <div key={field.id} className={index === currentQuestionIndex ? 'block' : 'hidden'}>
-              <Card>
+            <div 
+              key={field.id} 
+              className={`${index === currentQuestionIndex ? 'block' : 'hidden'} transition-all duration-300`}
+            >
+              <Card className={`relative ${getCardAnimationClasses(field.id, index)}`}>
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                   <div className="w-full pr-8">
                     <p className="text-lg font-semibold">
@@ -580,7 +600,10 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
           {viewMode === 'all' && (
             <div className="space-y-6 w-full">
               {fields.map((field, index) => (
-                <Card key={field.id} className="w-full">
+                <Card 
+                  key={field.id} 
+                  className={`w-full transition-all duration-300 ${getCardAnimationClasses(field.id, index)}`}
+                >
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
                       <div className="w-full pr-8">
@@ -718,26 +741,6 @@ Create a ${emailTone.toLowerCase()} email with appropriate greeting, body, and s
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
                     </svg>
                     Copy
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => {
-                      // Start over
-                      setGeneratedEmail('')
-                      setPlaceholders([])
-                      setUpdatedEmail('')
-                      reset({
-                        emailIdea: '',
-                        questionItems: []
-                      })
-                      setAnswers({})
-                    }}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    Start Over
                   </Button>
                 </div>
               </div>

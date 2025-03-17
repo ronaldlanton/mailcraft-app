@@ -32,11 +32,13 @@ interface FormData {
 
 export default function BreakdownReply() {
   const [isLoading, setIsLoading] = useState(false)
-  const [generatedReply, setGeneratedReply] = useState('')
+  const [generatedReply, setGeneratedReply] = useState<string | 'loading' | null>(null)
   const [isCopied, setIsCopied] = useState(false)
   const [emailTone, setEmailTone] = useState<string>('Professional')
   const [placeholders, setPlaceholders] = useState<{text: string, replacement: string}[]>([])
   const [updatedReply, setUpdatedReply] = useState('')
+  const [animatingCardId, setAnimatingCardId] = useState<string | null>(null)
+  const [deletedCardIndex, setDeletedCardIndex] = useState<number | null>(null)
   
   // Extract placeholders from generated reply
   useEffect(() => {
@@ -168,7 +170,7 @@ Use: [QUESTION]: Please let me know if you're available next week.`,
       // First, check if we have [QUESTION] tags at all
       if (!content.includes('[QUESTION]:')) {
         // Fallback: generate basic questions from unstructured content
-        const fallbackQuestions = generateFallbackQuestions(content, data.emailContent);
+        const fallbackQuestions = generateFallbackQuestions(content);
         replace(fallbackQuestions);
         return;
       }
@@ -295,18 +297,18 @@ Use: [QUESTION]: Please let me know if you're available next week.`,
       
       // If no valid questions were found, generate fallbacks
       if (validQuestionBlocks.length === 0) {
-        const fallbackQuestions = generateFallbackQuestions(content, data.emailContent);
+        const fallbackQuestions = generateFallbackQuestions(content);
         replace(fallbackQuestions);
         return;
       }
       
       // Convert to question items
-      const questionItems = validQuestionBlocks.map((item: any, index: number) => ({
+      const questionItems = validQuestionBlocks.map((item: {question: string, type: string, options?: string[], default?: string}, index: number) => ({
         id: `q-${index}`,
         question: item.question,
         answer: item.default || '',
         type: item.type,
-        options: item.options
+        options: item.options || []
       }));
       
       // Ensure all CHOICES questions have options
@@ -317,7 +319,7 @@ Use: [QUESTION]: Please let me know if you're available next week.`,
     } catch (error) {
       console.error('Error:', error)
       // Generate fallback questions in case of error
-      const fallbackQuestions = generateBasicQuestions(data.emailContent);
+      const fallbackQuestions = generateBasicQuestions();
       replace(fallbackQuestions);
       alert('There was an issue analyzing the email, but we\'ve generated some basic questions to help you respond.');
     } finally {
@@ -326,7 +328,7 @@ Use: [QUESTION]: Please let me know if you're available next week.`,
   }
   
   // Helper function to generate fallback questions from unstructured content
-  const generateFallbackQuestions = (content: string, originalEmail: string) => {
+  const generateFallbackQuestions = (content: string) => {
     // Try to extract potential questions from the content
     const sentences = content.split(/[.!?]\s+/);
     const potentialQuestions = sentences
@@ -346,11 +348,11 @@ Use: [QUESTION]: Please let me know if you're available next week.`,
     }
     
     // Otherwise, fall back to basic questions
-    return generateBasicQuestions(originalEmail);
+    return generateBasicQuestions();
   }
   
   // Helper function to generate basic questions from the email content
-  const generateBasicQuestions = (emailContent: string) => {
+  const generateBasicQuestions = () => {
     return [
       {
         id: 'q-0',
@@ -472,6 +474,44 @@ Create a ${emailTone.toLowerCase()} email reply with appropriate greeting, body,
     }
   };
 
+  // Handle deleting a question
+  const handleDeleteQuestion = (fieldId: string) => {
+    // Find the index of the field with this id before animating
+    const fieldIndex = fields.findIndex(f => f.id === fieldId);
+    
+    if (fieldIndex !== -1) {
+      // Set the animating card ID and index to trigger animations
+      setAnimatingCardId(fieldId);
+      setDeletedCardIndex(fieldIndex);
+      
+      // Wait for animation to complete before removing from state
+      setTimeout(() => {
+        // Remove from form state
+        const newFields = [...fields];
+        newFields.splice(fieldIndex, 1);
+        replace(newFields);
+        
+        // Reset animation states
+        setAnimatingCardId(null);
+        setDeletedCardIndex(null);
+      }, 300); // Match animation duration
+    }
+  }
+
+  // Helper function to determine card animation classes
+  const getCardAnimationClasses = (fieldId: string, index: number) => {
+    if (animatingCardId === fieldId) {
+      return "animate-slide-out-right animate-fade-out";
+    }
+    
+    // Apply slide-up animation to cards below the deleted card
+    if (deletedCardIndex !== null && index > deletedCardIndex) {
+      return "animate-slide-up";
+    }
+    
+    return "";
+  }
+
   return (
     <div className="container mx-auto py-8 flex flex-col min-h-[calc(100vh-14rem)] justify-center">
       {!fields.length && !generatedReply && (
@@ -519,10 +559,28 @@ Create a ${emailTone.toLowerCase()} email reply with appropriate greeting, body,
             <CardContent>
               <form onSubmit={handleSubmit(generateReply)}>
                 {fields.map((field, index) => (
-                  <div key={field.id} className="mb-6 w-full">
-                    <label className="block text-sm font-medium mb-2">
-                      {index + 1}. {field.question}
-                    </label>
+                  <div 
+                    key={field.id} 
+                    className={`mb-6 w-full transition-all duration-300 relative ${getCardAnimationClasses(field.id, index)}`}
+                  >
+                    <div className="flex justify-between items-start mb-2">
+                      <label className="block text-sm font-medium">
+                        {index + 1}. {field.question}
+                      </label>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 rounded-full flex-shrink-0"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleDeleteQuestion(field.id);
+                        }}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-gray-500 hover:text-red-500">
+                          <path d="M18 6L6 18M6 6l12 12"></path>
+                        </svg>
+                      </Button>
+                    </div>
                     
                     {field.type === 'CHOICES' && field.options && field.options.length > 0 ? (
                       <div className="space-y-2">
