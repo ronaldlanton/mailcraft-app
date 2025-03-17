@@ -54,7 +54,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 2. Click "Add new site" > "Import an existing project" 
 3. Select your GitHub repository
 4. Configure build settings:
-   - Build command: `npm run build`
+   - Build command: `npm ci && npm run build`
    - Publish directory: `.next`
 5. Set up environment variables in Netlify's UI (Settings > Site settings > Environment variables):
    - `OPENAI_API_KEY`
@@ -65,3 +65,17 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 6. Deploy your site
 
 For Google Auth to work properly, add your Netlify domain to the authorized redirect URIs in the [Google Cloud Console](https://console.cloud.google.com/).
+
+### Environment Variables
+
+This project uses environment variables for configuration. For local development, create a `.env.local` file in the project root with the following variables:
+
+```
+OPENAI_API_KEY=your-openai-api-key
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+For Netlify deployment, the app will read from `.env` file or from environment variables set in the Netlify UI. You can set these environment variables in the Netlify dashboard under Site settings > Build & deploy > Environment variables.
