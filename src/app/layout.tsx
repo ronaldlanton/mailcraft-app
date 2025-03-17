@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ProfileMenu } from "@/components/profile-menu";
 import { ProfileProvider } from "@/context/profile-context";
 import { AuthProvider } from "@/context/auth-context";
+import { FirstLoginProfile } from "@/components/first-login-profile";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -68,6 +69,7 @@ export default function RootLayout({
                   </div>
                 </footer>
               </div>
+              <FirstLoginProfile />
             </ProfileProvider>
           </AuthProvider>
         </ThemeProvider>

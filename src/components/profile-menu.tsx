@@ -24,6 +24,7 @@ export function ProfileMenu() {
   const [profileDialogOpen, setProfileDialogOpen] = React.useState(false)
   const { session, status, signOut } = useAuth()
   const router = useRouter()
+  const [imageError, setImageError] = React.useState(false)
 
   const handleLogout = async () => {
     await signOut()
@@ -61,13 +62,22 @@ export function ProfileMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button className="h-10 w-10 rounded-full overflow-hidden border-2 border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow">
-            <Image 
-              src={session?.user?.image || profileImage} 
-              alt="Profile" 
-              width={40} 
-              height={40}
-              className="h-full w-full object-cover bg-gray-100 dark:bg-gray-800"
-            />
+            {!imageError && session?.user?.image ? (
+              <img 
+                src={session.user.image} 
+                alt="Profile" 
+                className="h-full w-full object-cover bg-gray-100 dark:bg-gray-800"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <Image 
+                src={profileImage || "/profile-placeholder.svg"} 
+                alt="Profile" 
+                width={40} 
+                height={40}
+                className="h-full w-full object-cover bg-gray-100 dark:bg-gray-800"
+              />
+            )}
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56" align="end" forceMount>
