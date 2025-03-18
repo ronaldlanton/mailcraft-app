@@ -9,13 +9,31 @@ export default function Home() {
         <section className="min-h-[calc(100vh-6rem)] flex flex-col justify-center">
           <div className="flex flex-col items-center text-center max-w-3xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
-              Craft Perfect Emails with AI
+              Craft Perfect Documents & Emails with AI
             </h2>
             <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
-              Write professional, well-structured emails faster and respond to emails with confidence using our AI-powered assistant.
+              Create professional documents, write well-structured emails faster, and respond to emails with confidence using our AI-powered assistant.
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-4xl">
+              <Link href="/document" className="block">
+                <Card className="hover:shadow-lg transition-shadow duration-300 h-full cursor-pointer">
+                  <CardContent className="p-6">
+                    <div className="flex flex-col items-center">
+                      <div className="h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-semibold mb-2">Craft Document</h3>
+                      <p className="text-gray-600 dark:text-gray-300 text-center">
+                        Use AI to create structured documents with customizable sections.
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+              
               <Link href="/craft" className="block">
                 <Card className="hover:shadow-lg transition-shadow duration-300 h-full cursor-pointer">
                   <CardContent className="p-6">
@@ -67,7 +85,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">AI-Powered</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Leverage advanced AI models to generate high-quality email content tailored to your needs.
+                Leverage advanced AI models to generate high-quality document and email content tailored to your needs.
               </p>
             </div>
             
@@ -79,7 +97,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Time-Saving</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Reduce the time spent drafting emails by up to 80% while maintaining professional quality.
+                Reduce the time spent drafting documents and emails by up to 80% while maintaining professional quality.
               </p>
             </div>
             
@@ -91,7 +109,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Professional</h3>
               <p className="text-gray-600 dark:text-gray-300">
-                Ensure your emails are well-structured, clear, and professionally written every time.
+                Ensure your documents and emails are well-structured, clear, and professionally written every time.
               </p>
             </div>
           </div>
@@ -106,31 +124,31 @@ export default function Home() {
                   <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">1</div>
                   <div>
                     <h4 className="text-lg font-semibold mb-1">Choose Your Mode</h4>
-                    <p className="text-gray-600 dark:text-gray-300">Select whether you need to craft a new email or respond to an existing one.</p>
+                    <p className="text-gray-600 dark:text-gray-300">Select whether you need to craft a document, create a new email, or respond to an existing one.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">2</div>
                   <div>
                     <h4 className="text-lg font-semibold mb-1">Provide Input</h4>
-                    <p className="text-gray-600 dark:text-gray-300">Enter your email idea or paste the email you need to respond to.</p>
+                    <p className="text-gray-600 dark:text-gray-300">Enter your document or email idea, or paste the email you need to respond to.</p>
                   </div>
                 </li>
                 <li className="flex gap-4">
                   <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">3</div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-1">Answer Questions</h4>
-                    <p className="text-gray-600 dark:text-gray-300">Provide answers to the AI-generated guiding questions about your email.</p>
+                    <h4 className="text-lg font-semibold mb-1">Customize Structure</h4>
+                    <p className="text-gray-600 dark:text-gray-300">Organize your document with sections or answer questions to guide the AI generation process.</p>
                   </div>
-          </li>
+                </li>
                 <li className="flex gap-4">
                   <div className="flex-shrink-0 h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-400 font-bold">4</div>
                   <div>
-                    <h4 className="text-lg font-semibold mb-1">Get Your Email</h4>
-                    <p className="text-gray-600 dark:text-gray-300">Receive a professionally written email ready to send or customize further.</p>
+                    <h4 className="text-lg font-semibold mb-1">Get Your Result</h4>
+                    <p className="text-gray-600 dark:text-gray-300">Receive a professionally structured document or email ready to use or customize further.</p>
                   </div>
-          </li>
-        </ol>
+                </li>
+              </ol>
             </div>
             <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 shadow-md">
               <div className="aspect-w-16 aspect-h-9 bg-white dark:bg-gray-700 rounded-md flex items-center justify-center">
@@ -139,7 +157,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-        </div>
+          </div>
         </section>
       </main>
     </div>

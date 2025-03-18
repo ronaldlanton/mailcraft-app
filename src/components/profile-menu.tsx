@@ -2,7 +2,9 @@
 
 import * as React from "react"
 import { User, Settings, LogOut, LogIn } from "lucide-react"
-import Image from "next/image"
+import { useState, useEffect } from 'react'
+import { useSession, signIn, signOut } from 'next-auth/react'
+import { Session } from 'next-auth'
 import { useRouter } from "next/navigation"
 
 import {
@@ -70,11 +72,9 @@ export function ProfileMenu() {
                 onError={() => setImageError(true)}
               />
             ) : (
-              <Image 
-                src={profileImage || "/profile-placeholder.svg"} 
-                alt="Profile" 
-                width={40} 
-                height={40}
+              <img 
+                src={profileImage || '/profile-placeholder.png'} 
+                alt="Profile placeholder" 
                 className="h-full w-full object-cover bg-gray-100 dark:bg-gray-800"
               />
             )}
