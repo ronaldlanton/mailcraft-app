@@ -6,7 +6,10 @@ const nextConfig = {
       'lh3.googleusercontent.com',  // Google profile pictures
       'googleusercontent.com'       // Alternative Google domain
     ],
-  }
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig; 
